@@ -2,6 +2,8 @@ const express = require('express')
 const app = express()
 const PORT = 3000
 
+app.use(express.urlencoded({extended: true}))
+app.use(express.json())
 
 const character = [
     {
@@ -30,10 +32,18 @@ const character = [
 }
 ]
 
+/**
+ * html routes 
+ */ 
 
 app.get('/', (req, res) => {
 res.send('May the force be with you')
 })
+
+// / **
+// * API ROUTES
+// * 
+
 
 // /api/characters - show all character data
 app.get('/api/character', (req, res) => {
@@ -50,6 +60,16 @@ const character = characters.find(character => {
 res.join(character)
 })
 
+app.post('/api/character/add', (req, res) => {
+// console.log(req.body)
+const newCharacter = req.body
+newCharacter.routeName = newCharacter.name.replace(/ /g, '').toLowerCase()
+character.push(newCharacter)
+res.status(200).send()
+})
+
+
 app.listen(PORT, () => {
     console.log(`Server listening on http://localhost:${PORT}`)
 })
+
